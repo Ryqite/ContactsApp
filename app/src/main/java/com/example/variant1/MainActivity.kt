@@ -87,10 +87,10 @@ fun RequestContactPermission() {
         if (allGranted) {
 
         } else {
-            Toast.makeText(context, "разрешения не получены", Toast.LENGTH_SHORT).show()
         }
     }
     LaunchedEffect(Unit) {
             launcher.launch(permissions)
     }
 }
+

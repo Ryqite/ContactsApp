@@ -1,96 +1,104 @@
 package com.example.variant1
 
-import android.content.pm.PackageManager
-import android.os.Bundle
 import android.Manifest
-import android.widget.Toast
+import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.example.variant1.ui.theme.Variant1Theme
+import coil.compose.AsyncImage
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Text(text = "gregege")
-            RequestContactPermission()
-            }
+        ContactsScreen()
         }
     }
+}
 
 @Composable
-fun Contacts(contacts: List<Contact>, painter: Painter,modifier: Modifier) {
+fun ContactsScreen() {
+    val context = LocalContext.current
+    val contactsState = remember { mutableStateOf<List<Contact>>(emptyList()) }
+    val work = remember { WorkWithContacts() }
+    RequestContactPermission {
+        contactsState.value = work.loadContacts(context)
+    }
+    Contacts(contactsState.value)
+}
+
+@Composable
+fun Contacts(contacts: List<Contact>, modifier: Modifier = Modifier) {
     LazyColumn {
         itemsIndexed(contacts) { index, contact ->
-            Box(modifier = modifier.fillMaxWidth()) {
-                Row(modifier = modifier
-                    .background(Color.LightGray)
-                    .clickable {}) {
-                    Image(
-                        painter=painter,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop)
-                    Column(){
-                        Text(text = contact.name)
-                        Text(text = contact.number)
-                    }
-                }
-            }
+            ContactItem(contact, modifier)
         }
     }
 }
 
 
 @Composable
-fun RequestContactPermission() {
-    val permissions = remember {arrayOf(
+fun RequestContactPermission(permissionGranted: () -> Unit) {
+    val permissions = remember {
+        arrayOf(
             Manifest.permission.READ_CONTACTS,
-            Manifest.permission.CALL_PHONE)}
-    val context = LocalContext.current
+            Manifest.permission.CALL_PHONE
+        )
+    }
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        val allGranted = permissions.values.all { permission-> permission==true }
-        if (allGranted) {
-
-        } else {
+        if (permissions.values.all { permission -> permission == true }) {
+            permissionGranted()
         }
     }
     LaunchedEffect(Unit) {
-            launcher.launch(permissions)
+        launcher.launch(permissions)
     }
 }
 
+@Composable
+fun ContactItem(contact: Contact, modifier: Modifier) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(Color.LightGray)
+            .clickable {},
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        AsyncImage(
+            model = contact.photoUri,
+            contentDescription = "Contact photo",
+            placeholder = painterResource(R.mipmap.ic_launcher_round),
+            modifier = modifier
+                .size(48.dp)
+                .clip(CircleShape)
+        )
+    }
+    Spacer(modifier = modifier.width(16.dp))
+
+    Column {
+        Text(text = contact.name)
+        contact.number?.let { Text(text = it) }
+    }
+}

@@ -1,5 +1,5 @@
 # ContactsApp
-Technologies I used: Room, kotlin coroutines, retrofit, bottom navigation, koin, fragments and Clean Architecture(MVVM)
+Technologies I used: Android Sdk, Jetpack Compose, Clean Architecture, Coil
 --------------------------------------------------------------------------------------
 This is my Contacts app. Here I tried to work with Android SDK Components
 --------------------------------------------------------------------------------------

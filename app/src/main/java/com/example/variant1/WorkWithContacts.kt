@@ -35,6 +35,11 @@ class WorkWithContacts() {
 
         return contacts
     }
+    fun groupContacts(contacts: List<Contact>): Map<String, List<Contact>> {
+        return contacts.groupBy {
+            it.name.firstOrNull()?.uppercase() ?: "#"
+        }
+    }
     private companion object {
         const val ID=ContactsContract.CommonDataKinds.Phone._ID
         const val NAME=ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME

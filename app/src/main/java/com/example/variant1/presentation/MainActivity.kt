@@ -1,4 +1,4 @@
-package com.example.variant1
+package com.example.variant1.presentation
 
 import android.Manifest
 import android.content.Context
@@ -31,6 +31,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.variant1.R
+import com.example.variant1.data.Contact
+import com.example.variant1.domain.WorkWithContacts
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +73,7 @@ fun LetterHeader(letter: String) {
 }
 
 @Composable
-fun GroupedContacts(contacts: List<Contact>,workWithContacts: WorkWithContacts,context: Context) {
+fun GroupedContacts(contacts: List<Contact>, workWithContacts: WorkWithContacts, context: Context) {
     val groupedContacts = remember(contacts) {
         workWithContacts.groupContacts(contacts)
     }
@@ -119,7 +122,7 @@ fun RequestContactPermission(permissionGranted: () -> Unit) {
 }
 
 @Composable
-fun ContactItem(contact: Contact,context: Context) {
+fun ContactItem(contact: Contact, context: Context) {
     Surface(
         modifier = Modifier.padding(horizontal = 20.dp, vertical = 2.dp)
             .fillMaxWidth()

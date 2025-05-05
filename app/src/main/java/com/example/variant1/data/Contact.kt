@@ -1,4 +1,4 @@
-package com.example.variant1
+package com.example.variant1.data
 
 import android.net.Uri
 

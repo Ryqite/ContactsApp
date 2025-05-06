@@ -32,8 +32,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.variant1.R
-import com.example.variant1.data.Contact
-import com.example.variant1.domain.WorkWithContacts
+import com.example.variant1.domain.Contact
+import com.example.variant1.data.WorkWithContacts
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

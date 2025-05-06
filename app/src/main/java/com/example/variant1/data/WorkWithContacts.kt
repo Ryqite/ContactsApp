@@ -1,9 +1,9 @@
-package com.example.variant1.domain
+package com.example.variant1.data
 
 import android.content.Context
 import android.net.Uri
 import android.provider.ContactsContract
-import com.example.variant1.data.Contact
+import com.example.variant1.domain.Contact
 
 class WorkWithContacts() {
     fun loadContacts(context: Context): List<Contact> {
